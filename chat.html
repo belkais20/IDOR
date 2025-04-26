@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>الدردشة المباشرة</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    #messages {
+      list-style-type: none;
+      padding: 0;
+    }
+    #messages li {
+      margin: 10px 0;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>دردشة مباشرة</h1>
+
+  <ul id="messages"></ul>
+
+  <form id="form">
+    <input id="input" autocomplete="off" placeholder="اكتب رسالتك هنا" /><button>إرسال</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+
+    var form = document.getElementById('form');
+    var input = document.getElementById('input');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = '';
+      }
+    });
+
+    socket.on('chat message', function(msg) {
+      var item = document.createElement('li');
+      item.textContent = msg;
+      document.getElementById('messages').appendChild(item);
+    });
+  </script>
+</body>
+</html>
